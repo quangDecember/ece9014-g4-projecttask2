@@ -111,4 +111,26 @@ CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid)
   );
 
 ALTER TABLE datasets_TB
-add CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB(datasourceId);
+	ADD CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB (datasourceId);
+
+DESC forummessages_TB;
+    
+CREATE TABLE FORUMMESSAGEVOTES (
+FMVid INT NOT NULL,
+ForumMessageId INT NOT NULL references forummessages_TB(ForumMID),
+FromUserId INT NOT NULL,
+ToUserId INT NOT NULL,
+VoteDate Date,
+PRIMARY KEY (FMVid,ForumMessageId,FromUserId,ToUserId)
+);
+-- needs USER table for references
+
+CREATE TABLE DATASETVOTES(
+DatasetVoteId INT NOT NULL,
+UserId INT NOT NULL,
+DatasetVersionId INT NOT NULL references datasetversions_TB(datasetvid),
+VoteDate date,
+primary key (DatasetVoteId,UserId,DatasetVersionId)
+);
+-- needs USER table as well
+
