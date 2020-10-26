@@ -26,7 +26,7 @@ CREATE TABLE forumtopics_TB (
 
 );
 
-CREATE TABLE forummessgaes_TB (
+CREATE TABLE forummessages_TB (
           
    ForumMID      INT,
   forumm int,
@@ -40,7 +40,7 @@ CREATE TABLE forummessgaes_TB (
   /*ADD CONTRAINST FOR USER AS WELL*/
 );
 
-CREATE TABLE forummessgaesvote_TB (
+CREATE TABLE forummessagesvote_TB (
           
    ForumVoteID      INT,
    Votedate VARCHAR(20),
