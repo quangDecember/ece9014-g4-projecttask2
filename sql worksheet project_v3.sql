@@ -55,11 +55,11 @@ CREATE TABLE tags_TB (
           
 tagid      INT,
 supertagid int, 
---datasetid      INT,
+-- datasetid      INT,
 Description varchar(20),
---DatasetCount int,
---CompetitionCount int, 
---KernelCount int,
+-- DatasetCount int,
+-- CompetitionCount int, 
+-- KernelCount int,
    CONSTRAINT tag_PK PRIMARY KEY (tagid)
   
   /*add contrainst for kernels , competitions*/
@@ -79,15 +79,15 @@ OwnerUserId int,
 OwnerOrganizationId int, 
 CurrentDatasetVersionId int,
 Kernelid int,
---TotalKernels int,
+-- TotalKernels int,
 datasourceid int,
    CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
 /*add contrainst for users and kernel versions*/
   CONSTRAINT dataset_FK FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
 );
 
---ALTER TABLE tags_TB
---add CONSTRAINT tags_FK FOREIGN KEY (datasetid) REFERENCES datasets_tb(datasetid);
+-- ALTER TABLE tags_TB
+-- add CONSTRAINT tags_FK FOREIGN KEY (datasetid) REFERENCES datasets_tb(datasetid);
 
 CREATE TABLE datasetversions_TB (
           
