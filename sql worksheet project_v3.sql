@@ -164,19 +164,19 @@ PRIMARY KEY (competitionTagId,CompetitionId,TagId)
 
 CREATE TABLE USERS (
     userId	INT	NOT NULL,
-    UserName	NVARCHAR2 (50) ,
-    DisplayName	VARCHAR2 (50) ,
-    RegisterDate	DATE default sysdate NOT NULL,
-    PerformanceTier	NUMBER (2)	,
+    UserName	NVARCHAR (50) ,
+    DisplayName	VARCHAR (50),
+    RegisterDate DATE NOT NULL DEFAULT (CURRENT_DATE), -- SYSDATE -- is Oracle
+    PerformanceTier	INT	,
     CONSTRAINT user_PK PRIMARY KEY (userId)  
 );
 
 
 CREATE TABLE LANGUAGES (
     languageId INT NOT NULL,
-    languageName VARCHAR2 (30) NOT NULL,
-    DisplayName	VARCHAR2 (10) NOT NULL,
-    IsNotebook NUMBER(1) default 0 NOT NULL,
+    languageName VARCHAR (30) NOT NULL,
+    DisplayName	VARCHAR (10) NOT NULL,
+    IsNotebook INT(1) default 0 NOT NULL,
     CONSTRAINT language_PK PRIMARY KEY (languageId),
     CONSTRAINT language_BOOL_IsNotebook CHECK (IsNotebook IN (0,1))
 );
@@ -184,10 +184,10 @@ CREATE TABLE LANGUAGES (
 
 CREATE TABLE ORGANIZATIONS (
     orgId INT NOT NULL,
-    orgName	NVARCHAR2 (50) NOT NULL,
-    Slug VARCHAR2 (20) NOT NULL,
-    CreationDate DATE  default sysdate NOT NULL,
-    Description NVARCHAR2 (500),
+    orgName	NVARCHAR (50) NOT NULL,
+    Slug VARCHAR (20) NOT NULL,
+    CreationDate DATE  DEFAULT (CURRENT_DATE) NOT NULL,
+    Description NVARCHAR (500),
     CONSTRAINT organization_PK PRIMARY KEY (orgId)
 );
 
@@ -195,13 +195,13 @@ CREATE TABLE TEAMS (
      teamId	INT	NOT NULL,
     CompetitionId	INT	NOT NULL,
     TeamLeaderId	INT	,
-    TeamName	NVARCHAR2 (50)	,
-    ScoreFirstSubmittedDate	DATE	, --should be derived but insufficient data available
-    --LastSubmissionDate	DATE	, --[DERIVED]
+    TeamName	NVARCHAR(50)	,
+    ScoreFirstSubmittedDate	DATE	, -- should be derived but insufficient data available
+    -- LastSubmissionDate	DATE	, -- [DERIVED]
     PublicLeaderboardSubmissionId	INT	,
     PrivateLeaderboardSubmissionId	INT	,
-    IsBenchmark	NUMBER (1)	,
-    Medal	NUMBER (1)	,
+    IsBenchmark	BOOLEAN	,
+    Medal	BOOLEAN	,
     MedalAwardDate	DATE	,
     PublicLeaderboardRank	INT	,
     PrivateLeaderboardRank	INT	,
@@ -221,9 +221,9 @@ CREATE TABLE KERNELS (
     CreationDate	DATE	,
     EvaluationDate	DATE	,
     MadePublicDate	DATE	,
-    IsProjectLanguageTemplate	NUMBER (1)	,
-    CurrentUrlSlug	VARCHAR2 (20)	,
-    Medal	NUMBER (1)	,
+    IsProjectLanguageTemplate	BOOLEAN	,
+    CurrentUrlSlug	VARCHAR (20)	,
+    Medal	BOOLEAN,
     MedalAwardDate	DATE	,
     
     /* DERIVED:
@@ -244,11 +244,11 @@ CREATE TABLE KERNEL_VERSIONS (
 	ParentKVID	INT	,	
 	languageId	INT	NOT NULL,	
 	AuthorId	INT	NOT NULL,	
-	CreationDate	DATE default sysdate NOT NULL,	
+	CreationDate	DATE default (CURRENT_DATE) NOT NULL,	
 	VersionNumber	INT	,	
-	Title	VARCHAR2 (50)	,	
+	Title	VARCHAR (50)	,	
 	EvaluationDate	DATE	,	
-	IsChange	NUMBER(1)	,	
+	IsChange	BOOLEAN	,	
 	TotalLines	INT	,	
 	LinesInsertedFromPrevious	INT	,	
 	LinesChangedFromPrevious	INT	,	
@@ -257,7 +257,7 @@ CREATE TABLE KERNEL_VERSIONS (
 	LinesDeletedFromFork	INT	,	
 	LinesChangedFromFork	INT	,	
 	LinesUnchangedFromFork	INT	,	
-	--TotalVotes	INT	,	  --[DERIVED]
+	-- TotalVotes	INT	,	  --[DERIVED]
     CONSTRAINT kernelVersions_PK PRIMARY KEY (kvId) ,    
     CONSTRAINT kernelVersions_FK_Author FOREIGN KEY (AuthorId) REFERENCES USERS(userId) ,
     CONSTRAINT kernelVersions_FK_Parent FOREIGN KEY (ParentKVID) REFERENCES KERNEL_VERSIONS(kvId) ,
@@ -298,12 +298,12 @@ CREATE TABLE KERNEL_VOTES (
 CREATE TABLE USER_ACHIEVEMENTS (
 	achievementId	INT	NOT NULL,	
 	userId	INT	NOT NULL,	
-	AchievementType	VARCHAR2 (20)	NOT NULL,	
-	AchievementTier	NUMBER (1)	NOT NULL,	
+	AchievementType	VARCHAR (20)	NOT NULL,	
+	AchievementTier	BOOLEAN	NOT NULL,	
 	TierAchievementDate	DATE	,	
 	Points	INT	NOT NULL,
     
-    --should technically be derived, but we have insufficient data
+    -- should technically be derived, but we have insufficient data
 	CurrentRanking	INT	,	
 	HighestRanking	INT	,	
 	TotalGold	INT	NOT NULL,	
@@ -318,7 +318,7 @@ CREATE TABLE TEAM_MEMBERSHIPS (
     membershipId INT NOT NULL,
     teamId INT NOT NULL,
     userId INT NOT NULL,
-    requestDate DATE default sysdate NOT NULL,
+    requestDate DATE default (CURRENT_DATE) NOT NULL,
     CONSTRAINT TEAM_MEMBERSHIPS_PK PRIMARY KEY (membershipId) ,
     CONSTRAINT TEAM_MEMBERSHIPS_FK_team FOREIGN KEY (teamId) REFERENCES TEAMS(teamId) ,
     CONSTRAINT TEAM_MEMBERSHIPS_FK_member FOREIGN KEY (userId) REFERENCES USERS(userId) ,
@@ -332,7 +332,7 @@ CREATE TABLE SUBMISSIONS (
 	SourceKernelVersionId	INT	,	
 	SubmissionDate	DATE	default sysdate NOT NULL,	
 	ScoreDate	DATE	,	
-	--IsAfterDeadline	NUMBER (1)	NOT NULL,	[DERIVED]
+	-- IsAfterDeadline	NUMBER (1)	NOT NULL,	[DERIVED]
 	PublicScoreLeaderboardDisplay	NUMBER (5,5)	,	
 	PublicScoreFullPrecision	NUMBER	,	
 	PrivateScoreLeaderboardDisplay	NUMBER (5,5)	,	
