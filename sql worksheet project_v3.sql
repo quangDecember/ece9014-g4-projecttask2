@@ -17,9 +17,9 @@ CREATE TABLE forumtopics_TB (
   forumid       int,
   Creationdate     VARCHAR(20),
   DisplayName      VARCHAR(10),
-  LastCommentDate  Varchar(10),
-  TotalMessages    int,
-  totalviews       int,
+ -- LastCommentDate  Varchar(10),
+ -- TotalMessages    int,
+ -- totalviews       int,
   score            int,
   CONSTRAINT forumtopics_PK PRIMARY KEY (Forumtid),
   CONSTRAINT forumtopics_FK1 FOREIGN KEY (forumid) REFERENCES forum_TB(ForumID)
@@ -49,6 +49,27 @@ CREATE TABLE forummessagesvote_TB (
    CONSTRAINT forumvote_PK PRIMARY KEY (ForumVoteID)  
 );
 
+
+
+CREATE TABLE tags_TB (
+          
+tagid      INT,
+supertagid int, 
+--datasetid      INT,
+Description varchar(20),
+--DatasetCount int,
+--CompetitionCount int, 
+--KernelCount int,
+   CONSTRAINT tag_PK PRIMARY KEY (tagid)
+  
+  /*add contrainst for kernels , competitions*/
+);
+ALTER TABLE tags_TB
+add CONSTRAINT tags_FK1 FOREIGN KEY (supertagid) REFERENCES tags_TB(tagid);
+
+
+
+
 CREATE TABLE datasets_TB (
           
 datasetid      INT,
@@ -58,32 +79,15 @@ OwnerUserId int,
 OwnerOrganizationId int, 
 CurrentDatasetVersionId int,
 Kernelid int,
-TotalKernels int,
+--TotalKernels int,
 datasourceid int,
    CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
 /*add contrainst for users and kernel versions*/
   CONSTRAINT dataset_FK FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
 );
 
-CREATE TABLE tags_TB (
-          
-tagid      INT,
-supertagid int, 
-datasetid      INT,
-Description varchar(20),
-DatasetCount int,
-CompetitionCount int, 
-KernelCount int,
-   CONSTRAINT tag_PK PRIMARY KEY (tagid)
-  
-  /*add contrainst for kernels , competitions*/
-);
-ALTER TABLE tags_TB
-add CONSTRAINT tags_FK1 FOREIGN KEY (supertagid) REFERENCES tags_TB(tagid);
-
-ALTER TABLE tags_TB
-add CONSTRAINT tags_FK FOREIGN KEY (datasetid) REFERENCES datasets_tb(datasetid);
-
+--ALTER TABLE tags_TB
+--add CONSTRAINT tags_FK FOREIGN KEY (datasetid) REFERENCES datasets_tb(datasetid);
 
 CREATE TABLE datasetversions_TB (
           
