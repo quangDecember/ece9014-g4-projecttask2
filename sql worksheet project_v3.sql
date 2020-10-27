@@ -138,3 +138,25 @@ primary key (DatasetVoteId,UserId,DatasetVersionId)
 );
 -- needs USER table as well
 
+CREATE TABLE COMPETITION(
+CompetitionId INT NOT NULL PRIMARY KEY,
+Title VARCHAR(255),
+CompetitionTypeId INT,
+Subtitle MEDIUMTEXT,
+ForumID INT not null references forum_TB(ForumID),
+OrganizationID INT not null, -- missing references
+HostName varchar(255),
+EnabledDate datetime,
+Deadline datetime,
+TotalTeams int,
+TotalCompetitors int,
+TotalSubmission int,
+OnlyAllowKernelSubmission bool,
+check (CompetitionTypeId = 1 or CompetitionTypeId = 2)
+);
+CREATE TABLE COMPETITIONTAGS (
+competitionTagId INT NOT NULL,
+CompetitionId INT NOT NULL references COMPETITION(CompetitionId),
+TagId INT not null references tags_TB(tagid),
+PRIMARY KEY (competitionTagId,CompetitionId,TagId)
+);
