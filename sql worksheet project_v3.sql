@@ -10,7 +10,7 @@ CREATE TABLE USERS (
 
 CREATE TABLE tags_TB (
           
-tagid      INT,
+tagid      INT NOT NULL,
 supertagid int, 
 -- datasetid      INT,
 Description varchar(20),
@@ -48,7 +48,7 @@ CREATE TABLE ORGANIZATIONS (
 
 CREATE TABLE forum_TB (
           
-   ForumID    INT,
+   ForumID    INT NOT NULL,
    ParentForumID INT,
    Title varchar(20),
    CONSTRAINT forumt_PK PRIMARY KEY (ForumID)  
@@ -129,7 +129,7 @@ CREATE TABLE KERNELS (
 
 CREATE TABLE datasets_TB (
           
-datasetid      INT,
+datasetid      INT NOT NULL,
 tagid int,
 CreatorUserId int references USERS(USERID),
 OwnerUserId int references USERS(USERID),
@@ -140,7 +140,7 @@ Kernelid int,
 datasourceid int,
    CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
 /*add contrainst for users and kernel versions*/
-  CONSTRAINT dataset_FK FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
+  CONSTRAINT dataset_FK1 FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
 );
 
 
@@ -150,7 +150,8 @@ datasourceId int ,
 CreatorUserId int,
 CreationDate varchar(20),
 CurrentDatasourceVersionId int,
-CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid)
+CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid),
+CONSTRAINT datasourceid_FK1 FOREIGN KEY (CreatorUserId) REFERENCES USERS(userId) 
   );
 
 
@@ -159,17 +160,15 @@ CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid)
 -- batch 3
 
 
-ALTER TABLE datasets_TB
-	ADD CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB (datasourceId);
 
 CREATE TABLE forumtopics_TB (
           
-  Forumtid      int,
-  forumid       int,
+  Forumtid      int not null,
+  forumid       int not null,
   Creationdate     VARCHAR(20),
   DisplayName      VARCHAR(10),
-  LastCommentDate  DATE,
-	TotalMessages    int,
+  --LastCommentDate  DATE, --[DERIVED]
+	--TotalMessages    int, --[DERIVED]
    totalviews       int,
   score            int,
   CONSTRAINT forumtopics_PK PRIMARY KEY (Forumtid),
@@ -303,15 +302,17 @@ CREATE TABLE USER_FOLLOWERS (
 
 CREATE TABLE forummessages_TB (
           
-   ForumMID      INT,
-  forumm int,
+   ForumMID      INT NOT NULL,
+  forumTID int NOT NULL,
    UserId int REFERENCES USERS(USERID),
-   Postdate VARCHAR(10),
-   ReplyToForumMessageId Varchar(10),
-   Message int,
+   Postdate DATE,
+   ReplyToForumMessageId INT,
+   Message NVARCHAR2(4000),
    Medal int,
    CONSTRAINT forummessages_PK PRIMARY KEY (ForumMID) , 
-  CONSTRAINT forummessages_FK1 FOREIGN KEY (forummid) REFERENCES forumtopics_TB(Forumtid)
+  CONSTRAINT forummessages_FK1 FOREIGN KEY (forumTID) REFERENCES forumtopics_TB(Forumtid),
+  CONSTRAINT forummessages_FK2 FOREIGN KEY (forumTID) REFERENCES forumtopics_TB(Forumtid),
+  CONSTRAINT forummessages_FK3 FOREIGN KEY (ReplyToForumMessageId) REFERENCES forummessages_TB(ForumMID)
   
 );
 
