@@ -135,6 +135,8 @@ CreatorUserId int references USERS(USERID),
 OwnerUserId int references USERS(USERID),
 OwnerOrganizationId int references ORGANIZATIONS(ORGID), 
 CurrentDatasetVersionId int, --FK constraint in next batch
+Title varchar(200),
+Subtitle varchar(2000),
 Kernelid int,
 -- TotalKernels int, --[DERIVED]
 datasourceid int,
@@ -211,8 +213,6 @@ datasetvid int not null,
 DatasetId int,
 CreatorUserId int not null references USERS(USERID),
 CreationDate date,
-Title varchar(20),
-Subtitle varchar(20),
 Description  varchar(20),
 VersionNotes varchar(20),
 TotalCompressedBytes int,
@@ -220,6 +220,8 @@ TotalCompressedBytes int,
 
   CONSTRAINT datasetversion_FK FOREIGN KEY (DatasetId) REFERENCES datasets_tb(datasetid)
 );
+ALTER datasets_TB ADD CONSTRAINT datasets_FK_versionFOREIGN KEY (CurrentDatasetVersionId)	REFERENCES datasetversions_TB(datasetvid);			   
+						   
 
 
 -- batch 4
