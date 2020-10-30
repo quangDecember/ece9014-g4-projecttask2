@@ -315,7 +315,18 @@ CREATE TABLE forummessages_TB (
   CONSTRAINT forummessages_FK3 FOREIGN KEY (ReplyToForumMessageId) REFERENCES forummessages_TB(ForumMID)
   
 );
+						   
+						   
 
+CREATE TABLE Kernel_Version_DatasetSources (
+    kvdssID INT NOT NULL,
+    kvId INT NOT NULL,
+    datasetvid INT NOT NULL,
+    CONSTRAINT Kernel_Version_DatasetSources_PK PRIMARY KEY (kvdssID) ,
+    CONSTRAINT Kernel_Version_DatasetSources_FK1 FOREIGN KEY (kvId) REFERENCES user_TB(userId) ,
+    CONSTRAINT Kernel_Version_DatasetSources_FK2 FOREIGN KEY (datasetvid) REFERENCES user_TB(userId) ,
+    CONSTRAINT Kernel_Version_DatasetSources_UNIQUE UNIQUE(kvId,datasetvid) 
+);
 
 CREATE TABLE KERNEL_TAGS (
     kernelTagId INT NOT NULL,
