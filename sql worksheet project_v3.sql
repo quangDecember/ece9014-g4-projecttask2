@@ -220,7 +220,7 @@ TotalCompressedBytes int,
 
   CONSTRAINT datasetversion_FK FOREIGN KEY (DatasetId) REFERENCES datasets_tb(datasetid)
 );
-ALTER datasets_TB ADD CONSTRAINT datasets_FK_versionFOREIGN KEY (CurrentDatasetVersionId)	REFERENCES datasetversions_TB(datasetvid);			   
+ALTER table datasets_TB ADD CONSTRAINT datasets_FK_version FOREIGN KEY (CurrentDatasetVersionId)	REFERENCES datasetversions_TB(datasetvid);			   
 						   
 
 
