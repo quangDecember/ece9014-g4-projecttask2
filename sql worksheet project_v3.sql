@@ -12,8 +12,8 @@ CREATE TABLE tags_TB (
           
 tagid      INT NOT NULL,
 supertagid int, 
--- datasetid      INT,
-Description varchar(20),
+tagName varchar(200),
+Description varchar(2000),
 -- DatasetCount int, --[DERIVED]
 -- CompetitionCount int, --[DERIVED]
 -- KernelCount int, --[DERIVED]
@@ -50,7 +50,7 @@ CREATE TABLE forum_TB (
           
    ForumID    INT NOT NULL,
    ParentForumID INT,
-   Title varchar(20),
+   Title varchar(50),
    CONSTRAINT forumt_PK PRIMARY KEY (ForumID)  
 );
 
@@ -150,7 +150,7 @@ CREATE TABLE datasetsources_TB (
           
 datasourceId int , 
 CreatorUserId int,
-CreationDate varchar(20),
+CreationDate DATE,
 CurrentDatasourceVersionId int,
 CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid),
 CONSTRAINT datasourceid_FK1 FOREIGN KEY (CreatorUserId) REFERENCES USERS(userId) 
@@ -167,8 +167,8 @@ CREATE TABLE forumtopics_TB (
           
   Forumtid      int not null,
   forumid       int not null,
-  Creationdate     VARCHAR(20),
-  DisplayName      VARCHAR(10),
+  Creationdate     DATE,
+  DisplayName      VARCHAR(200),
   --LastCommentDate  DATE, --[DERIVED]
 	--TotalMessages    int, --[DERIVED]
    totalviews       int,
@@ -213,8 +213,8 @@ datasetvid int not null,
 DatasetId int,
 CreatorUserId int not null references USERS(USERID),
 CreationDate date,
-Description  varchar(20),
-VersionNotes varchar(20),
+Description  varchar(200),
+VersionNotes varchar(200),
 TotalCompressedBytes int,
    CONSTRAINT datasetvid_PK PRIMARY KEY (datasetvid),
 
