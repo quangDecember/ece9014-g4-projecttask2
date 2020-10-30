@@ -14,12 +14,12 @@ tagid      INT,
 supertagid int, 
 -- datasetid      INT,
 Description varchar(20),
--- DatasetCount int,
--- CompetitionCount int, 
--- KernelCount int,
+-- DatasetCount int, --[DERIVED]
+-- CompetitionCount int, --[DERIVED]
+-- KernelCount int, --[DERIVED]
    CONSTRAINT tag_PK PRIMARY KEY (tagid)
   
-  /*add contrainst for kernels , competitions*/
+  /*NO NEED to add contrainst for kernels , competitions AS THEY WILL ONLY BE IN VIEW/S*/
 );
 ALTER TABLE tags_TB
 add CONSTRAINT tags_FK1 FOREIGN KEY (supertagid) REFERENCES tags_TB(tagid);
@@ -69,11 +69,12 @@ OrganizationID INT not null references ORGANIZATIONS(orgId),
 HostName varchar(255),
 EnabledDate date,
 Deadline date,
-TotalTeams int,
-TotalCompetitors int,
-TotalSubmission int,
-OnlyAllowKernelSubmission NUMBER(1),
-check (CompetitionTypeId = 1 or CompetitionTypeId = 2)
+--TotalTeams int, --[DERIVED]
+--TotalCompetitors int,--[DERIVED]
+--TotalSubmission int,--[DERIVED]
+OnlyAllowKernelSubmission NUMBER(1) default (0) NOT NULL,
+check (CompetitionTypeId = 1 or CompetitionTypeId = 2),
+check (OnlyAllowKernelSubmission = 0 or OnlyAllowKernelSubmission = 1)
 );
 
 
@@ -133,9 +134,9 @@ tagid int,
 CreatorUserId int references USERS(USERID),
 OwnerUserId int references USERS(USERID),
 OwnerOrganizationId int references ORGANIZATIONS(ORGID), 
-CurrentDatasetVersionId int,
+CurrentDatasetVersionId int, --FK constraint in next batch
 Kernelid int,
--- TotalKernels int,
+-- TotalKernels int, --[DERIVED]
 datasourceid int,
    CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
 /*add contrainst for users and kernel versions*/
@@ -152,13 +153,14 @@ CurrentDatasourceVersionId int,
 CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid)
   );
 
-ALTER TABLE datasets_TB
-	ADD CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB (datasourceId);
 
 
 
 -- batch 3
 
+
+ALTER TABLE datasets_TB
+	ADD CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB (datasourceId);
 
 CREATE TABLE forumtopics_TB (
           
