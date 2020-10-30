@@ -317,14 +317,13 @@ CREATE TABLE forummessages_TB (
 );
 						   
 						   
-
 CREATE TABLE Kernel_Version_DatasetSources (
     kvdssID INT NOT NULL,
     kvId INT NOT NULL,
     datasetvid INT NOT NULL,
     CONSTRAINT Kernel_Version_DatasetSources_PK PRIMARY KEY (kvdssID) ,
-    CONSTRAINT Kernel_Version_DatasetSources_FK1 FOREIGN KEY (kvId) REFERENCES user_TB(userId) ,
-    CONSTRAINT Kernel_Version_DatasetSources_FK2 FOREIGN KEY (datasetvid) REFERENCES user_TB(userId) ,
+    CONSTRAINT Kernel_Version_DatasetSources_FK1 FOREIGN KEY (kvId) REFERENCES KERNEL_VERSIONS(kvId) ,
+    CONSTRAINT Kernel_Version_DatasetSources_FK2 FOREIGN KEY (datasetvid) REFERENCES datasetversions_TB(datasetvid) ,
     CONSTRAINT Kernel_Version_DatasetSources_UNIQUE UNIQUE(kvId,datasetvid) 
 );
 
