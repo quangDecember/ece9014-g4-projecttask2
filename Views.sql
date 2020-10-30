@@ -25,11 +25,15 @@ FROM
 
 
 
-----created to support next view (competitions)
 CREATE OR REPLACE VIEW KAGGLE_META.VW_TEAMS AS
 SELECT
     TEAMID,
     COMPETITIONID,
+	
+	(
+      select max(SUBMISSIONDATE) from KAGGLE_META.SUBMISSIONS
+	   where KAGGLE_META.SUBMISSIONS.TEAMID=KAGGLE_META.SUBMISSIONS.TEAMID
+	) as LastSubmissionDate,
 
 	(
       select count(*) from KAGGLE_META.TEAM_MEMBERSHIPS
@@ -53,6 +57,7 @@ SELECT
     PRIVATELEADERBOARDRANK
 FROM
     KAGGLE_META.TEAMS;
+
 
 
 
