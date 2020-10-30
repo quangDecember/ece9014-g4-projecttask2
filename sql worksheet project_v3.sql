@@ -1,55 +1,12 @@
-/*unary relationship with itself*/
-CREATE TABLE forum_TB (
-          
-   ForumID    INT,
-   ParentForumID INT,
-   Title varchar(20),
-   CONSTRAINT forumt_PK PRIMARY KEY (ForumID)  
+-- BATCH 1
+CREATE TABLE USERS (
+    userId	INT	NOT NULL,
+    UserName	NVARCHAR2 (50) ,
+    DisplayName	VARCHAR2 (50) ,
+    RegisterDate	DATE default sysdate NOT NULL,
+    PerformanceTier	NUMBER (2)	,
+    CONSTRAINT user_PK PRIMARY KEY (userId)  
 );
-
-
-ALTER TABLE forum_TB
-add CONSTRAINT forum_FK FOREIGN KEY (ParentForumID) REFERENCES forum_TB(ForumID);
-
-CREATE TABLE forumtopics_TB (
-          
-  Forumtid      int,
-  forumid       int,
-  Creationdate     VARCHAR(20),
-  DisplayName      VARCHAR(10),
- -- LastCommentDate  Varchar(10),
- -- TotalMessages    int,
- -- totalviews       int,
-  score            int,
-  CONSTRAINT forumtopics_PK PRIMARY KEY (Forumtid),
-  CONSTRAINT forumtopics_FK1 FOREIGN KEY (forumid) REFERENCES forum_TB(ForumID)
-
-);
-
-CREATE TABLE forummessages_TB (
-          
-   ForumMID      INT,
-  forumm int,
-   UserId VARCHAR(20),
-   Postdate VARCHAR(10),
-   ReplyToForumMessageId Varchar(10),
-   Message int,
-   Medal int,
-   CONSTRAINT forummessages_PK PRIMARY KEY (ForumMID) , 
-  CONSTRAINT forummessages_FK1 FOREIGN KEY (forummid) REFERENCES forumtopics_TB(Forumtid)
-  /*ADD CONTRAINST FOR USER AS WELL*/
-);
-
-CREATE TABLE forummessagesvote_TB (
-          
-   ForumVoteID      INT,
-   Votedate VARCHAR(20),
-   Message int,
-   Medal int,
-   CONSTRAINT forumvote_PK PRIMARY KEY (ForumVoteID)  
-);
-
-
 
 CREATE TABLE tags_TB (
           
@@ -69,109 +26,6 @@ add CONSTRAINT tags_FK1 FOREIGN KEY (supertagid) REFERENCES tags_TB(tagid);
 
 
 
-
-CREATE TABLE datasets_TB (
-          
-datasetid      INT,
-tagid int,
-CreatorUserId int,
-OwnerUserId int,
-OwnerOrganizationId int, 
-CurrentDatasetVersionId int,
-Kernelid int,
--- TotalKernels int,
-datasourceid int,
-   CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
-/*add contrainst for users and kernel versions*/
-  CONSTRAINT dataset_FK FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
-);
-
--- ALTER TABLE tags_TB
--- add CONSTRAINT tags_FK FOREIGN KEY (datasetid) REFERENCES datasets_tb(datasetid);
-
-CREATE TABLE datasetversions_TB (
-          
-datasetvid int,
-DatasetId int,
-CreatorUserId varchar(20),
-CreationDate varchar(20),
-Title varchar(20),
-Subtitle varchar(20),
-Description  varchar(20),
-VersionNotes varchar(20),
-TotalCompressedBytes int,
-   CONSTRAINT datasetvid_PK PRIMARY KEY (datasetvid),
-/*add contrainst for users */
-  CONSTRAINT datasetversion_FK FOREIGN KEY (DatasetId) REFERENCES datasets_tb(datasetid)
-);
-
-CREATE TABLE datasetsources_TB (
-          
-datasourceId int , 
-CreatorUserId int,
-CreationDate varchar(20),
-CurrentDatasourceVersionId int,
-CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid)
-  );
-
-ALTER TABLE datasets_TB
-	ADD CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB (datasourceId);
-
-DESC forummessages_TB;
-    
-CREATE TABLE FORUMMESSAGEVOTES (
-FMVid INT NOT NULL,
-ForumMessageId INT NOT NULL references forummessages_TB(ForumMID),
-FromUserId INT NOT NULL,
-ToUserId INT NOT NULL,
-VoteDate Date,
-PRIMARY KEY (FMVid,ForumMessageId,FromUserId,ToUserId)
-);
--- needs USER table for references
-
-CREATE TABLE DATASETVOTES(
-DatasetVoteId INT NOT NULL,
-UserId INT NOT NULL,
-DatasetVersionId INT NOT NULL references datasetversions_TB(datasetvid),
-VoteDate date,
-primary key (DatasetVoteId,UserId,DatasetVersionId)
-);
--- needs USER table as well
-
-CREATE TABLE COMPETITION(
-CompetitionId INT NOT NULL PRIMARY KEY,
-Title VARCHAR(255),
-CompetitionTypeId INT,
-Subtitle MEDIUMTEXT,
-ForumID INT not null references forum_TB(ForumID),
-OrganizationID INT not null, -- missing references
-HostName varchar(255),
-EnabledDate datetime,
-Deadline datetime,
-TotalTeams int,
-TotalCompetitors int,
-TotalSubmission int,
-OnlyAllowKernelSubmission bool,
-check (CompetitionTypeId = 1 or CompetitionTypeId = 2)
-);
-CREATE TABLE COMPETITIONTAGS (
-competitionTagId INT NOT NULL,
-CompetitionId INT NOT NULL references COMPETITION(CompetitionId),
-TagId INT not null references tags_TB(tagid),
-PRIMARY KEY (competitionTagId,CompetitionId,TagId)
-);
-
-
-CREATE TABLE USERS (
-    userId	INT	NOT NULL,
-    UserName	NVARCHAR2 (50) ,
-    DisplayName	VARCHAR2 (50) ,
-    RegisterDate	DATE default sysdate NOT NULL,
-    PerformanceTier	NUMBER (2)	,
-    CONSTRAINT user_PK PRIMARY KEY (userId)  
-);
-
-
 CREATE TABLE LANGUAGES (
     languageId INT NOT NULL,
     languageName VARCHAR2 (30) NOT NULL,
@@ -181,6 +35,7 @@ CREATE TABLE LANGUAGES (
     CONSTRAINT language_BOOL_IsNotebook CHECK (IsNotebook IN (0,1))
 );
 
+-- batch 2
 
 CREATE TABLE ORGANIZATIONS (
     orgId INT NOT NULL,
@@ -190,6 +45,37 @@ CREATE TABLE ORGANIZATIONS (
     Description NVARCHAR2 (500),
     CONSTRAINT organization_PK PRIMARY KEY (orgId)
 );
+
+CREATE TABLE forum_TB (
+          
+   ForumID    INT,
+   ParentForumID INT,
+   Title varchar(20),
+   CONSTRAINT forumt_PK PRIMARY KEY (ForumID)  
+);
+
+
+ALTER TABLE forum_TB
+add CONSTRAINT forum_FK FOREIGN KEY (ParentForumID) REFERENCES forum_TB(ForumID);
+
+
+CREATE TABLE COMPETITION(
+CompetitionId INT NOT NULL PRIMARY KEY,
+Title VARCHAR(255),
+CompetitionTypeId INT,
+Subtitle CLOB,
+ForumID INT not null references forum_TB(ForumID),
+OrganizationID INT not null references ORGANIZATIONS(orgId),
+HostName varchar(255),
+EnabledDate date,
+Deadline date,
+TotalTeams int,
+TotalCompetitors int,
+TotalSubmission int,
+OnlyAllowKernelSubmission NUMBER(1),
+check (CompetitionTypeId = 1 or CompetitionTypeId = 2)
+);
+
 
 CREATE TABLE TEAMS (
      teamId	INT	NOT NULL,
@@ -210,6 +96,7 @@ CREATE TABLE TEAMS (
     CONSTRAINT team_FK_Competition FOREIGN KEY (CompetitionId) REFERENCES COMPETITION(CompetitionId),
     CONSTRAINT team_BOOL_IsBenchmark CHECK (IsBenchmark is null or IsBenchmark IN (0,1))
 ); 
+
 
 CREATE TABLE KERNELS (
      scriptId	INT 	NOT NULL,
@@ -238,6 +125,57 @@ CREATE TABLE KERNELS (
         CHECK (IsProjectLanguageTemplate is null or IsProjectLanguageTemplate IN (0,1))
 );
 
+
+CREATE TABLE datasets_TB (
+          
+datasetid      INT,
+tagid int,
+CreatorUserId int references USERS(USERID),
+OwnerUserId int references USERS(USERID),
+OwnerOrganizationId int references ORGANIZATIONS(ORGID), 
+CurrentDatasetVersionId int,
+Kernelid int,
+-- TotalKernels int,
+datasourceid int,
+   CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
+/*add contrainst for users and kernel versions*/
+  CONSTRAINT dataset_FK FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
+);
+
+
+CREATE TABLE datasetsources_TB (
+          
+datasourceId int , 
+CreatorUserId int,
+CreationDate varchar(20),
+CurrentDatasourceVersionId int,
+CONSTRAINT datasourceid_PK PRIMARY KEY (datasourceid)
+  );
+
+ALTER TABLE datasets_TB
+	ADD CONSTRAINT dataset_FK2 FOREIGN KEY (datasourceid) REFERENCES datasetsources_TB (datasourceId);
+
+
+
+-- batch 3
+
+
+CREATE TABLE forumtopics_TB (
+          
+  Forumtid      int,
+  forumid       int,
+  Creationdate     VARCHAR(20),
+  DisplayName      VARCHAR(10),
+  LastCommentDate  DATE,
+	TotalMessages    int,
+   totalviews       int,
+  score            int,
+  CONSTRAINT forumtopics_PK PRIMARY KEY (Forumtid),
+  CONSTRAINT forumtopics_FK1 FOREIGN KEY (forumid) REFERENCES forum_TB(ForumID)
+
+);
+
+
 CREATE TABLE KERNEL_VERSIONS (
  	kvId	INT	NOT NULL,	
 	ScriptId	INT	NOT NULL,	
@@ -265,35 +203,26 @@ CREATE TABLE KERNEL_VERSIONS (
     CONSTRAINT kernelVersions_BOOL_IsChange CHECK (IsChange is null or IsChange IN (0,1))
 );
 
-CREATE TABLE KERNEL_VERSION_DATASET_SOURCES (
-    kvdsId INT NOT NULL,
-    kvId INT NOT NULL,
-    datasetvid INT NOT NULL,
-    CONSTRAINT KERNEL_VERSION_DATASET_SOURCES_PK PRIMARY KEY (kvdsId) ,
-    CONSTRAINT KERNEL_VERSION_DATASET_SOURCES_FK_kv FOREIGN KEY (kvId) REFERENCES KERNEL_VERSIONS(kvId) ,
-    CONSTRAINT KERNEL_VERSION_DATASET_SOURCES_FK_datasetvid FOREIGN KEY (datasetvid) REFERENCES datasetversions_TB(datasetvid) ,
-    CONSTRAINT KERNEL_VERSION_DATASET_SOURCES_UNIQUE UNIQUE(kvId,datasetvid) 
+
+CREATE TABLE datasetversions_TB (
+          
+datasetvid int not null,
+DatasetId int,
+CreatorUserId int not null references USERS(USERID),
+CreationDate date,
+Title varchar(20),
+Subtitle varchar(20),
+Description  varchar(20),
+VersionNotes varchar(20),
+TotalCompressedBytes int,
+   CONSTRAINT datasetvid_PK PRIMARY KEY (datasetvid),
+
+  CONSTRAINT datasetversion_FK FOREIGN KEY (DatasetId) REFERENCES datasets_tb(datasetid)
 );
 
-CREATE TABLE KERNEL_TAGS (
-    kernelTagId INT NOT NULL,
-    scriptId INT NOT NULL,
-    tagid INT NOT NULL,
-    CONSTRAINT KERNEL_TAGS_PK PRIMARY KEY (kernelTagId) ,
-    CONSTRAINT KERNEL_TAGS_FK_kv FOREIGN KEY (scriptId) REFERENCES KERNELS(scriptId) ,
-    CONSTRAINT KERNEL_TAGS_FK_tag FOREIGN KEY (tagid) REFERENCES tags_TB(tagid) ,
-    CONSTRAINT KERNEL_TAGS_UNIQUE UNIQUE(scriptId,tagid) 
-);
 
-CREATE TABLE KERNEL_VOTES (
-    kernelVoteId INT NOT NULL,
-    kvId INT NOT NULL,
-    userId INT NOT NULL,
-    CONSTRAINT kernelVote_PK PRIMARY KEY (kernelVoteId) ,
-    CONSTRAINT kernelVote_FK_kv FOREIGN KEY (kvId) REFERENCES KERNEL_VERSIONS(kvId) ,
-    CONSTRAINT kernelVote_FK_voter FOREIGN KEY (userId) REFERENCES USERS(userId) ,
-    CONSTRAINT kernelVote_UNIQUE UNIQUE(kvId,userId) 
-);
+-- batch 4
+
 
 CREATE TABLE USER_ACHIEVEMENTS (
 	achievementId	INT	NOT NULL,	
@@ -314,6 +243,7 @@ CREATE TABLE USER_ACHIEVEMENTS (
     CONSTRAINT USER_ACHIEVEMENTS_FK_user FOREIGN KEY (userId) REFERENCES USERS(userId) 
 );
 
+
 CREATE TABLE TEAM_MEMBERSHIPS (
     membershipId INT NOT NULL,
     teamId INT NOT NULL,
@@ -324,6 +254,7 @@ CREATE TABLE TEAM_MEMBERSHIPS (
     CONSTRAINT TEAM_MEMBERSHIPS_FK_member FOREIGN KEY (userId) REFERENCES USERS(userId) ,
     CONSTRAINT TEAM_MEMBERSHIPS_UNIQUE UNIQUE(teamId,userId) 
 );
+
 
 CREATE TABLE SUBMISSIONS (
     submissionId	INT	NOT NULL,	
@@ -343,6 +274,7 @@ CREATE TABLE SUBMISSIONS (
     CONSTRAINT submissions_FK_kvId FOREIGN KEY (SourceKernelVersionId) REFERENCES KERNEL_VERSIONS(kvId)
 );
 
+
 CREATE TABLE USER_ORGANIZATIONS (
     orgMemberId INT NOT NULL,
     orgId INT NOT NULL,
@@ -352,6 +284,7 @@ CREATE TABLE USER_ORGANIZATIONS (
     CONSTRAINT UserOrganizations_FK_member FOREIGN KEY (userId) REFERENCES USERS(userId) ,
     CONSTRAINT UserOrganizations_UNIQUE UNIQUE(orgId,userId) 
 );
+
 
 CREATE TABLE USER_FOLLOWERS (
     followId INT NOT NULL,
@@ -364,3 +297,79 @@ CREATE TABLE USER_FOLLOWERS (
     CONSTRAINT UserFollowers_UNIQUE UNIQUE(userId,followingUserId) 
 );
 
+-- batch 5
+
+CREATE TABLE forummessages_TB (
+          
+   ForumMID      INT,
+  forumm int,
+   UserId int REFERENCES USERS(USERID),
+   Postdate VARCHAR(10),
+   ReplyToForumMessageId Varchar(10),
+   Message int,
+   Medal int,
+   CONSTRAINT forummessages_PK PRIMARY KEY (ForumMID) , 
+  CONSTRAINT forummessages_FK1 FOREIGN KEY (forummid) REFERENCES forumtopics_TB(Forumtid)
+  
+);
+
+
+CREATE TABLE KERNEL_TAGS (
+    kernelTagId INT NOT NULL,
+    scriptId INT NOT NULL,
+    tagid INT NOT NULL,
+    CONSTRAINT KERNEL_TAGS_PK PRIMARY KEY (kernelTagId) ,
+    CONSTRAINT KERNEL_TAGS_FK_kv FOREIGN KEY (scriptId) REFERENCES KERNELS(scriptId) ,
+    CONSTRAINT KERNEL_TAGS_FK_tag FOREIGN KEY (tagid) REFERENCES tags_TB(tagid) ,
+    CONSTRAINT KERNEL_TAGS_UNIQUE UNIQUE(scriptId,tagid) 
+);
+
+CREATE TABLE COMPETITIONTAGS (
+competitionTagId INT NOT NULL,
+CompetitionId INT NOT NULL references COMPETITION(CompetitionId),
+TagId INT not null references tags_TB(tagid),
+PRIMARY KEY (competitionTagId),
+unique(CompetitionId,TagId)
+);
+
+CREATE TABLE DATASETTAGS(
+  datasetTagId INT NOT NULL,
+  datasetId INT NOT NULL references DATASETS_TB(DATASETID),
+  tagId INT NOT NULL references TAGS_TB(TAGID),
+  CONSTRAINT DATASETTAGS_PK PRIMARY KEY (datasetTagId) ,
+  CONSTRAINT DATASETTAGS_UNIQUE UNIQUE(datasetId,tagId) 
+);
+
+
+-- batch 6
+
+CREATE TABLE DATASETVOTES(
+DatasetVoteId INT NOT NULL,
+UserId INT NOT NULL references USERS(USERID),
+DatasetVersionId INT NOT NULL references datasetversions_TB(datasetvid),
+VoteDate date,
+primary key (DatasetVoteId),
+unique(UserId,DatasetVersionId)
+);
+
+  
+CREATE TABLE FORUMMESSAGEVOTES (
+FMVid INT NOT NULL,
+ForumMessageId INT NOT NULL references forummessages_TB(ForumMID),
+FromUserId INT NOT NULL references USERS(USERID),
+ToUserId INT NOT NULL references USERS(USERID),
+VoteDate Date,
+PRIMARY KEY (FMVid),
+  unique(ForumMessageId,FromUserId,ToUserId)
+);
+
+
+CREATE TABLE KERNEL_VOTES (
+    kernelVoteId INT NOT NULL,
+    kvId INT NOT NULL,
+    userId INT NOT NULL,
+    CONSTRAINT kernelVote_PK PRIMARY KEY (kernelVoteId) ,
+    CONSTRAINT kernelVote_FK_kv FOREIGN KEY (kvId) REFERENCES KERNEL_VERSIONS(kvId) ,
+    CONSTRAINT kernelVote_FK_voter FOREIGN KEY (userId) REFERENCES USERS(userId) ,
+    CONSTRAINT kernelVote_UNIQUE UNIQUE(kvId,userId) 
+);
