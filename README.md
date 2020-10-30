@@ -20,8 +20,7 @@ Datasources
 ###### Batch 3
 ForumTopics\
 KernelVersions\
-DatasetVersions\
-KernelVersionDatasetSources
+DatasetVersions
 
 ###### Batch 4
 UserAchievements\
@@ -32,6 +31,7 @@ UserFollowers
 
 ###### Batch 5
 ForumMessages\
+KernelVersionDatasetSources\
 KernelTags\
 CompetitionTags\
 DatasetTags
