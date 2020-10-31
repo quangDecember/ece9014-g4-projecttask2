@@ -14,12 +14,8 @@ tagid      INT NOT NULL,
 supertagid int, 
 tagName varchar(200),
 Description varchar(2000),
--- DatasetCount int, --[DERIVED]
--- CompetitionCount int, --[DERIVED]
--- KernelCount int, --[DERIVED]
    CONSTRAINT tag_PK PRIMARY KEY (tagid)
   
-  /*NO NEED to add contrainst for kernels , competitions AS THEY WILL ONLY BE IN VIEW/S*/
 );
 ALTER TABLE tags_TB
 add CONSTRAINT tags_FK1 FOREIGN KEY (supertagid) REFERENCES tags_TB(tagid);
@@ -69,9 +65,6 @@ OrganizationID INT not null references ORGANIZATIONS(orgId),
 HostName varchar(255),
 EnabledDate date,
 Deadline date,
---TotalTeams int, --[DERIVED]
---TotalCompetitors int,--[DERIVED]
---TotalSubmission int,--[DERIVED]
 OnlyAllowKernelSubmission NUMBER(1) default (0) NOT NULL,
 check (CompetitionTypeId = 1 or CompetitionTypeId = 2),
 check (OnlyAllowKernelSubmission = 0 or OnlyAllowKernelSubmission = 1)
@@ -84,7 +77,6 @@ CREATE TABLE TEAMS (
     TeamLeaderId	INT	,
     TeamName	NVARCHAR2 (50)	,
     ScoreFirstSubmittedDate	DATE	, --should be derived but insufficient data available
-    --LastSubmissionDate	DATE	, --[DERIVED]
     PublicLeaderboardSubmissionId	INT	,
     PrivateLeaderboardSubmissionId	INT	,
     IsBenchmark	NUMBER (1)	,
@@ -114,11 +106,8 @@ CREATE TABLE KERNELS (
     Medal	NUMBER (1)	,
     MedalAwardDate	DATE	,
     
-    /* DERIVED:
+    
     TotalViews	INT 	,
-    TotalComments	INT 	,
-    TotalVotes	INT 	,
-    */
     
     CONSTRAINT kernel_PK PRIMARY KEY (scriptId) ,    
     CONSTRAINT kernel_FK_Author FOREIGN KEY (AuthorId) REFERENCES USERS(userId) ,
@@ -130,7 +119,6 @@ CREATE TABLE KERNELS (
 CREATE TABLE datasets_TB (
           
 datasetid      INT NOT NULL,
-tagid int,
 CreatorUserId int references USERS(USERID),
 OwnerUserId int references USERS(USERID),
 OwnerOrganizationId int references ORGANIZATIONS(ORGID), 
@@ -138,11 +126,8 @@ CurrentDatasetVersionId int, --FK constraint in next batch
 Title varchar(200),
 Subtitle varchar(2000),
 Kernelid int,
--- TotalKernels int, --[DERIVED]
 datasourceid int,
-   CONSTRAINT datasetid_PK PRIMARY KEY (datasetid),
-/*add contrainst for users and kernel versions*/
-  CONSTRAINT dataset_FK1 FOREIGN KEY (tagid) REFERENCES tags_tb(tagid)
+   CONSTRAINT datasetid_PK PRIMARY KEY (datasetid)
 );
 
 
@@ -169,8 +154,6 @@ CREATE TABLE forumtopics_TB (
   forumid       int not null,
   Creationdate     DATE,
   DisplayName      VARCHAR(200),
-  --LastCommentDate  DATE, --[DERIVED]
-	--TotalMessages    int, --[DERIVED]
    totalviews       int,
   score            int,
   CONSTRAINT forumtopics_PK PRIMARY KEY (Forumtid),
@@ -198,7 +181,6 @@ CREATE TABLE KERNEL_VERSIONS (
 	LinesDeletedFromFork	INT	,	
 	LinesChangedFromFork	INT	,	
 	LinesUnchangedFromFork	INT	,	
-	--TotalVotes	INT	,	  --[DERIVED]
     CONSTRAINT kernelVersions_PK PRIMARY KEY (kvId) ,    
     CONSTRAINT kernelVersions_FK_Author FOREIGN KEY (AuthorId) REFERENCES USERS(userId) ,
     CONSTRAINT kernelVersions_FK_Parent FOREIGN KEY (ParentKVID) REFERENCES KERNEL_VERSIONS(kvId) ,
@@ -266,7 +248,6 @@ CREATE TABLE SUBMISSIONS (
 	SourceKernelVersionId	INT	,	
 	SubmissionDate	DATE	default sysdate NOT NULL,	
 	ScoreDate	DATE	,	
-	--IsAfterDeadline	NUMBER (1)	NOT NULL,	[DERIVED]
 	PublicScoreLeaderboardDisplay	NUMBER (5,5)	,	
 	PublicScoreFullPrecision	NUMBER	,	
 	PrivateScoreLeaderboardDisplay	NUMBER (5,5)	,	
