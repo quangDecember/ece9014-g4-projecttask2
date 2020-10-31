@@ -36,7 +36,7 @@ CREATE TABLE LANGUAGES (
 CREATE TABLE ORGANIZATIONS (
     orgId INT NOT NULL,
     orgName	NVARCHAR2 (50) NOT NULL,
-    Slug VARCHAR2 (20) NOT NULL,
+    Slug VARCHAR2 (50) NOT NULL,
     CreationDate DATE  default sysdate NOT NULL,
     Description NVARCHAR2 (5000),
     CONSTRAINT organization_PK PRIMARY KEY (orgId)
@@ -102,7 +102,7 @@ CREATE TABLE KERNELS (
     EvaluationDate	DATE	,
     MadePublicDate	DATE	,
     IsProjectLanguageTemplate	NUMBER (1)	,
-    CurrentUrlSlug	VARCHAR2 (20)	,
+    CurrentUrlSlug	VARCHAR2 (50)	,
     Medal	NUMBER (1)	,
     MedalAwardDate	DATE	,
     
