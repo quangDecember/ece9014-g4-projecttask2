@@ -13,7 +13,7 @@ CREATE TABLE tags_TB (
 tagid      INT NOT NULL,
 supertagid int, 
 tagName varchar(200),
-Description varchar(2000),
+Description varchar(5000),
    CONSTRAINT tag_PK PRIMARY KEY (tagid)
   
 );
@@ -38,7 +38,7 @@ CREATE TABLE ORGANIZATIONS (
     orgName	NVARCHAR2 (50) NOT NULL,
     Slug VARCHAR2 (20) NOT NULL,
     CreationDate DATE  default sysdate NOT NULL,
-    Description NVARCHAR2 (500),
+    Description NVARCHAR2 (5000),
     CONSTRAINT organization_PK PRIMARY KEY (orgId)
 );
 
@@ -195,8 +195,8 @@ datasetvid int not null,
 DatasetId int,
 CreatorUserId int not null references USERS(USERID),
 CreationDate date,
-Description  varchar(200),
-VersionNotes varchar(200),
+Description  varchar(5000),
+VersionNotes varchar(5000),
 TotalCompressedBytes int,
    CONSTRAINT datasetvid_PK PRIMARY KEY (datasetvid),
 
@@ -290,7 +290,7 @@ CREATE TABLE forummessages_TB (
    UserId int REFERENCES USERS(USERID),
    Postdate DATE,
    ReplyToForumMessageId INT,
-   Message NVARCHAR2(4000),
+   Message NVARCHAR2(5000),
    Medal int,
    CONSTRAINT forummessages_PK PRIMARY KEY (ForumMID) , 
   CONSTRAINT forummessages_FK1 FOREIGN KEY (forumTID) REFERENCES forumtopics_TB(Forumtid),
