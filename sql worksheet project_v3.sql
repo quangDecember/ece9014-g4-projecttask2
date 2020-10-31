@@ -294,7 +294,6 @@ CREATE TABLE forummessages_TB (
    Medal int,
    CONSTRAINT forummessages_PK PRIMARY KEY (ForumMID) , 
   CONSTRAINT forummessages_FK1 FOREIGN KEY (forumTID) REFERENCES forumtopics_TB(Forumtid),
-  CONSTRAINT forummessages_FK2 FOREIGN KEY (forumTID) REFERENCES forumtopics_TB(Forumtid),
   CONSTRAINT forummessages_FK3 FOREIGN KEY (ReplyToForumMessageId) REFERENCES forummessages_TB(ForumMID)
   
 );
