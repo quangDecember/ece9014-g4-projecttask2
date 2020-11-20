@@ -12,8 +12,9 @@ CREATE TABLE COMPETITION{
 
 CREATE TABLE DATASET{
     ID INT NOT NULL,
-    Title varchar(200),
-    Subtitle varchar(2000),
+    Title VARCHAR(200),
+    Subtitle VARCHAR(2000),
+    OwnerUserId INT,
     CurrentDatasetVersionId int,
 
     CONSTRAINT DATASET_PK PRIMARY KEY (ID)
