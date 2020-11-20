@@ -22,6 +22,7 @@ CREATE TABLE DW.DATASET{
 
 CREATE TABLE DW.USER{
     ID INT NOT NULL,
+    UserId INT NOT NULL, 
     UserName VARCHAR2 (50),
     DisplayName	VARCHAR2 (50),
     RegisterDate DATE default sysdate NOT NULL,

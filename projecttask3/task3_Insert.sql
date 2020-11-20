@@ -31,3 +31,15 @@ INSERT INTO DW.KERNEL(CreationDate, AuthorUserID, CurrentKernelVersionID, MadePu
         SELECT CreationDate, AuthorId, CurrentKernelVersionId, MadePublicDate
         FROM op.KERNELS
     )
+
+INSERT INTO DW.PERFORMANCE_FACT(UsersID, CompetitionsID, DatasetsID, ForumsID, KernelsID, TotalSubmissions, TotalMedals, TotalForumMessages)
+    (
+        SELECT dw_u.ID, dw_c.ID, dw_d.ID, dw_f.ID, dw_k.ID, COUNT(s.submissionId), SUM(a.TotalGold)+SUM(a.TotalSilver)+SUM(a.TotalBronze), COUNT(fm.ForumMID)
+        FROM DW.COMPETITION dw_c, DW.DATASET dw_d, DW.USER dw_u, DW.FORUM dw_f, DW.KERNEL dw_k, op.SUBMISSIONS s, op.USER_ACHIEVEMENTS a, op.forummessages_TB fm
+        WHERE
+            dw_u.UserId = s.userId
+        and dw_u.UserId = fm.UserId
+        and dw.u.UserId = a.userId
+        GROUP BY
+            dw.u.UserId
+    )
