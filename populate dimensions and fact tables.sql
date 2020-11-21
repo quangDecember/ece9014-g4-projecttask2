@@ -9,13 +9,13 @@ INSERT INTO DW.COMPETION_DIM (
 ) 
 (
   select 
-      C.CompetitionId AS Competition_Id  ,
-      C.Title AS Competition_Title  ,
-      T.TEAMID AS Team_Id ,
-      C.EnabledDate EnabledDate ,
-      C.Deadline AS Deadline ,
-      C.OnlyAllowKernelSubmission AS OnlyAllowKernelSubmission 
-  from KAGGLE_META.TEAMS T
-  LEFT JOIN KAGGLE_META.COMPETITION C
+      C.CompetitionId  ,
+      C.Title   ,
+      T.TEAMID   ,
+      C.EnabledDate  ,
+      C.Deadline   ,
+      C.OnlyAllowKernelSubmission  
+  from OP.TEAMS T
+  LEFT JOIN OP.COMPETITION C
   ON T.COMPETITIONID = C.COMPETITIONID
 );
