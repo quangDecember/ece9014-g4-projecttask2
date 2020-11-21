@@ -55,6 +55,7 @@ create table  DW.PERFORMANCE_FACT
   forumsId INT references DW.FORUM(id),
   datasetId INT references DW.DATASET(id),
   totalSubmissions INT,
+  avgScore INT,
   totalMedals INT,
   totalForumMessages INT,
   unique(userId,competitionsId,forumsId,kernelId,datasetId)
